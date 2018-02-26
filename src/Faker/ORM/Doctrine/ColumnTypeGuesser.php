@@ -31,8 +31,8 @@ class ColumnTypeGuesser
                     return $generator->boolean;
                 };
             case 'decimal':
-                $nbDigits = isset($class->fieldMappings[$fieldName]['precision']) ? $class->fieldMappings[$fieldName]['precision'] : 2;
-                while ($nbDigits > 2) {
+                $nbDigits = isset($class->fieldMappings[$fieldName]['precision']) ? $class->fieldMappings[$fieldName]['precision'] : 4;
+                while ($nbDigits > 4) {
                     $max = pow(10, $nbDigits);
                     if ($max > mt_getrandmax()) {
                         $nbDigits--;
@@ -42,7 +42,7 @@ class ColumnTypeGuesser
                 }
 
                 return function () use ($generator, $nbDigits) {
-                    return $generator->randomNumber($nbDigits + 2) / 100;
+                    return $generator->randomNumber($nbDigits) / 100;
                 };
             case 'smallint':
                 return function () {
