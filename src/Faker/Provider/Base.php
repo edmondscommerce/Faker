@@ -168,9 +168,19 @@ class Base
      *
      * @return array New array with $count elements from $array
      */
-    public static function randomElements(array $array = array('a', 'b', 'c'), $count = 1, $allowDuplicates = false)
+    public static function randomElements($array = array('a', 'b', 'c'), $count = 1, $allowDuplicates = false)
     {
-        $allKeys = array_keys($array);
+        $traversables = array();
+
+        if ($array instanceof \Traversable) {
+            foreach ($array as $element) {
+                $traversables[] = $element;
+            }
+        }
+
+        $arr = count($traversables) ? $traversables : $array;
+
+        $allKeys = array_keys($arr);
         $numKeys = count($allKeys);
 
         if (!$allowDuplicates && $numKeys < $count) {
@@ -191,7 +201,7 @@ class Base
                 $keys[$num] = true;
             }
 
-            $elements[] = $array[$allKeys[$num]];
+            $elements[] = $arr[$allKeys[$num]];
             $numElements++;
         }
 
@@ -206,7 +216,7 @@ class Base
      */
     public static function randomElement($array = array('a', 'b', 'c'))
     {
-        if (!$array) {
+        if (!$array || ($array instanceof \Traversable && !count($array))) {
             return null;
         }
         $elements = static::randomElements($array, 1);
@@ -260,7 +270,7 @@ class Base
      * Returns a shuffled version of the array.
      *
      * This function does not mutate the original array. It uses the
-     * Fisher–Yates algorithm, which is unbiaised, together with a Mersenne
+     * Fisher–Yates algorithm, which is unbiased, together with a Mersenne
      * twister random generator. This function is therefore more random than
      * PHP's shuffle() function, and it is seedable.
      *
@@ -276,7 +286,7 @@ class Base
         $shuffledArray = array();
         $i = 0;
         reset($array);
-        while (list($key, $value) = each($array)) {
+        foreach ($array as $key => $value) {
             if ($i == 0) {
                 $j = 0;
             } else {
@@ -297,7 +307,7 @@ class Base
      * Returns a shuffled version of the string.
      *
      * This function does not mutate the original string. It uses the
-     * Fisher–Yates algorithm, which is unbiaised, together with a Mersenne
+     * Fisher–Yates algorithm, which is unbiased, together with a Mersenne
      * twister random generator. This function is therefore more random than
      * PHP's shuffle() function, and it is seedable. Additionally, it is
      * UTF8 safe if the mb extension is available.
@@ -422,7 +432,7 @@ class Base
      * Regex delimiters '/.../' and begin/end markers '^...$' are ignored.
      *
      * Only supports a small subset of the regex syntax. For instance,
-     * unicode, negated classes, unbouned ranges, subpatterns, back references,
+     * unicode, negated classes, unbounded ranges, subpatterns, back references,
      * assertions, recursive patterns, and comments are not supported. Escaping
      * support is extremely fragile.
      *
