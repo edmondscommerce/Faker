@@ -4,7 +4,6 @@ namespace Faker\Test\Provider;
 
 use Faker\Provider\Base as BaseProvider;
 use PHPUnit\Framework\TestCase;
-use Traversable;
 
 class BaseTest extends TestCase
 {
@@ -65,7 +64,7 @@ class BaseTest extends TestCase
 
     public function testRandomNumberAcceptsStrictParamToEnforceNumberSize()
     {
-        $this->assertEquals(5, strlen((string) BaseProvider::randomNumber(5, true)));
+        $this->assertEquals(5, strlen((string)BaseProvider::randomNumber(5, true)));
     }
 
     public function testNumberBetween()
@@ -84,8 +83,8 @@ class BaseTest extends TestCase
 
     public function testRandomFloat()
     {
-        $min = 4;
-        $max = 10;
+        $min           = 4;
+        $max           = 10;
         $nbMaxDecimals = 8;
 
         $result = BaseProvider::randomFloat($nbMaxDecimals, $min, $max);
@@ -96,6 +95,12 @@ class BaseTest extends TestCase
         $this->assertGreaterThanOrEqual($min, $result);
         $this->assertLessThanOrEqual($max, $result);
         $this->assertLessThanOrEqual($nbMaxDecimals, strlen($parts[1]));
+    }
+
+    public function testRandomFloatNoArguments()
+    {
+        $result = BaseProvider::randomFloat();
+        $this->assertInternalType('float', $result);
     }
 
     public function testRandomLetterReturnsString()
@@ -189,7 +194,7 @@ class BaseTest extends TestCase
 
     public function testShuffleArrayReturnsAnArrayWithSameElements()
     {
-        $array = array(2, 4, 6, 8, 10);
+        $array        = array(2, 4, 6, 8, 10);
         $shuffleArray = BaseProvider::shuffleArray($array);
         $this->assertContains(2, $shuffleArray);
         $this->assertContains(4, $shuffleArray);
@@ -200,7 +205,7 @@ class BaseTest extends TestCase
 
     public function testShuffleArrayReturnsADifferentArrayThanTheOriginal()
     {
-        $arr = array(1, 2, 3, 4, 5);
+        $arr           = array(1, 2, 3, 4, 5);
         $shuffledArray = BaseProvider::shuffleArray($arr);
         $this->assertNotEquals($arr, $shuffledArray);
     }
@@ -225,7 +230,7 @@ class BaseTest extends TestCase
 
     public function testShuffleStringReturnsAnStringWithSameElements()
     {
-        $string = 'acegi';
+        $string        = 'acegi';
         $shuffleString = BaseProvider::shuffleString($string);
         $this->assertContains('a', $shuffleString);
         $this->assertContains('c', $shuffleString);
@@ -236,7 +241,7 @@ class BaseTest extends TestCase
 
     public function testShuffleStringReturnsADifferentStringThanTheOriginal()
     {
-        $string = 'abcdef';
+        $string         = 'abcdef';
         $shuffledString = BaseProvider::shuffleString($string);
         $this->assertNotEquals($string, $shuffledString);
     }
@@ -316,7 +321,7 @@ class BaseTest extends TestCase
             array('azeQSDF1234', 'azeQSDF1234', 'does not change non regex chars'),
             array('foo(bar){1}', 'foobar', 'replaces regex characters'),
             array('', '', 'supports empty string'),
-            array('/^foo(bar){1}$/', 'foobar', 'ignores regex delimiters')
+            array('/^foo(bar){1}$/', 'foobar', 'ignores regex delimiters'),
         );
     }
 
@@ -344,7 +349,7 @@ class BaseTest extends TestCase
             array('[a-z]{2,3}', 'brackets quantifiers on character class range'),
             array('(a|b){2,3}', 'brackets quantifiers on alternation'),
             array('\.\*\?\+', 'escaped characters'),
-            array('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', 'complex regex')
+            array('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', 'complex regex'),
         );
     }
 
@@ -353,7 +358,7 @@ class BaseTest extends TestCase
      */
     public function testRegexifySupportedRegexSyntax($pattern, $message)
     {
-        $this->assertRegExp('/' . $pattern . '/', BaseProvider::regexify($pattern), 'Regexify supports ' . $message);
+        $this->assertRegExp('/'.$pattern.'/', BaseProvider::regexify($pattern), 'Regexify supports '.$message);
     }
 
     public function testOptionalReturnsProviderValueWhenCalledWithWeight1()
@@ -393,14 +398,14 @@ class BaseTest extends TestCase
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
         $values = array();
-        for ($i=0; $i < 10; $i++) {
-            $values[]= $faker->optional()->randomDigit;
+        for ($i = 0; $i < 10; $i++) {
+            $values[] = $faker->optional()->randomDigit;
         }
         $this->assertContains(null, $values);
 
         $values = array();
-        for ($i=0; $i < 10; $i++) {
-            $values[]= $faker->optional(50)->randomDigit;
+        for ($i = 0; $i < 10; $i++) {
+            $values[] = $faker->optional(50)->randomDigit;
         }
         $this->assertContains(null, $values);
     }
@@ -449,8 +454,8 @@ class BaseTest extends TestCase
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
         $values = array();
-        for ($i=0; $i < 10; $i++) {
-            $values[]= $faker->unique()->randomDigit;
+        for ($i = 0; $i < 10; $i++) {
+            $values[] = $faker->unique()->randomDigit;
         }
         sort($values);
         $this->assertEquals(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), $values);
@@ -463,7 +468,7 @@ class BaseTest extends TestCase
     {
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
-        for ($i=0; $i < 11; $i++) {
+        for ($i = 0; $i < 11; $i++) {
             $faker->unique()->randomDigit;
         }
     }
@@ -473,12 +478,12 @@ class BaseTest extends TestCase
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
         $values = array();
-        for ($i=0; $i < 10; $i++) {
-            $values[]= $faker->unique()->randomDigit;
+        for ($i = 0; $i < 10; $i++) {
+            $values[] = $faker->unique()->randomDigit;
         }
-        $values[]= $faker->unique(true)->randomDigit;
-        for ($i=0; $i < 9; $i++) {
-            $values[]= $faker->unique()->randomDigit;
+        $values[] = $faker->unique(true)->randomDigit;
+        for ($i = 0; $i < 9; $i++) {
+            $values[] = $faker->unique()->randomDigit;
         }
         sort($values);
         $this->assertEquals(array(0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9), $values);
@@ -502,11 +507,11 @@ class BaseTest extends TestCase
     {
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
-        $values = array();
-        $evenValidator = function($digit) {
+        $values        = array();
+        $evenValidator = function ($digit) {
             return $digit % 2 === 0;
         };
-        for ($i=0; $i < 50; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $values[$faker->valid($evenValidator)->randomDigit] = true;
         }
         $uniqueValues = array_keys($values);
@@ -521,10 +526,10 @@ class BaseTest extends TestCase
     {
         $faker = new \Faker\Generator();
         $faker->addProvider(new \Faker\Provider\Base($faker));
-        $evenValidator = function($digit) {
+        $evenValidator = function ($digit) {
             return $digit % 2 === 0;
         };
-        for ($i=0; $i < 11; $i++) {
+        for ($i = 0; $i < 11; $i++) {
             $faker->valid($evenValidator)->randomElement(array(1, 3, 5, 7, 9));
         }
     }
