@@ -143,17 +143,26 @@ class EntityPopulator
                 }
             }
 
-            $index = 0;
-            $formatters[$assocName] = function ($inserted) use ($relatedClass, &$index, $unique, $optional) {
+            // Use an array so we can store one index per related class type.
+            $relatedClassIndex = [];
+
+            $formatters[$assocName] = function ($inserted) use ($relatedClass, &$relatedClassIndex, $unique, $optional) {
 
                 if (isset($inserted[$relatedClass])) {
                     if ($unique) {
                         $related = null;
+
+                        if (! isset($relatedClassIndex[$relatedClass])) {
+                            $relatedClassIndex[$relatedClass] = 0;
+                        }
+
+                        $index = $relatedClassIndex[$relatedClass];
+
                         if (isset($inserted[$relatedClass][$index]) || !$optional) {
                             $related = $inserted[$relatedClass][$index];
                         }
 
-                        $index++;
+                        $relatedClassIndex[$relatedClass]++;
 
                         return $related;
                     }
